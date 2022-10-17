@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/insta_input_bg.xml" value="0.124" />
+        <entry key="app/src/main/res/drawable/insta_login.xml" value="0.185" />
+        <entry key="app/src/main/res/layout/activity_insta_join.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_insta_login.xml" value="0.1703125" />
+        <entry key="app/src/main/res/layout/activity_insta_splash.xml" value="0.15625" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
