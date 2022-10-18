@@ -1,17 +1,17 @@
 package com.hee.instagram
 
-import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -21,9 +21,11 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-var context  : InstaMainActivity = InstaMainActivity()
-
 class InstaFeedFragment : Fragment(){
+
+    lateinit var retrofitService: RetrofitService
+    lateinit var postLayer : ImageView
+    lateinit var postHeart : ImageView
 
     // 1. onCreateView를 override하여 처음 이 액티비티로 올때 insta_feed_fragment 그려주기
     override fun onCreateView(
@@ -32,6 +34,18 @@ class InstaFeedFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.insta_feed_fragment, container, false)
+    }
+
+    fun postLike(post_id: Int){
+        retrofitService.postLike(post_id).enqueue(object:Callback<Any>{
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                Toast.makeText(activity, "좋아요!", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                Toast.makeText(activity, "좋아요 실패", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +62,7 @@ class InstaFeedFragment : Fragment(){
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val retrofitService = retrofit.create(RetrofitService::class.java)
+        retrofitService = retrofit.create(RetrofitService::class.java)
 
         // 3_2 getInstagramPosts() 호출하여 ArrayList에 담아주기
         retrofitService.getInstagramPosts().enqueue(object : Callback<ArrayList<InstaPost>>{
@@ -62,7 +76,8 @@ class InstaFeedFragment : Fragment(){
                     postList!!,
                     LayoutInflater.from(activity),
                     Glide.with(activity!!),
-
+                    this@InstaFeedFragment,
+                    activity as (InstaMainActivity)
                 )
             }
 
@@ -73,9 +88,11 @@ class InstaFeedFragment : Fragment(){
 
     // 3_3 RecyclerViewAdapter 클래스 생성
     class PostRecyclerViewAdapter(
-        val postList : ArrayList<InstaPost>,
-        val inflater : LayoutInflater,
-        val glide : RequestManager,
+        val postList: ArrayList<InstaPost>,
+        val inflater: LayoutInflater,
+        val glide: RequestManager,
+        val instaPostFragment: InstaFeedFragment,
+        val activity: InstaMainActivity
     ): RecyclerView.Adapter<PostRecyclerViewAdapter.ViewHolder>(){
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -83,14 +100,36 @@ class InstaFeedFragment : Fragment(){
             val ownerUsername: TextView
             val postImg: ImageView
             val postContent: TextView
+            val postLayer: ImageView
+            val postHeart: ImageView
 
             init {
                 ownerImg = itemView.findViewById(R.id.owner_img)
                 ownerUsername = itemView.findViewById(R.id.owner_username)
                 postImg = itemView.findViewById(R.id.post_img)
                 postContent = itemView.findViewById(R.id.post_content)
+                postLayer = itemView.findViewById(R.id.post_layer)
+                postHeart = itemView.findViewById(R.id.post_heart)
 
+                // 이미지 클릭시 좋아요 함수 호출 (서버에 post id 전달)
+                postImg.setOnClickListener{
+                    instaPostFragment.postLike(postList.get(adapterPosition).id)
+                    Thread{
+                        activity.runOnUiThread{
+                            postLayer.visibility = VISIBLE
+                            postHeart.visibility = VISIBLE
+                        }
+                        Thread.sleep(2000)
+                        activity.runOnUiThread{
+                            postLayer.visibility = INVISIBLE
+                            postHeart.visibility = INVISIBLE
+
+
+                        }
+                    }.start()
+                }
             }
+
 
         }
 
@@ -101,13 +140,9 @@ class InstaFeedFragment : Fragment(){
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val post = postList.get(position)
 
-//            if(post.owner_profile.image != null){
-//                glide.load(post.owner_profile).into(holder.ownerImg)
-//            }else{
-//                glide.load(ResourcesCompat.getDrawable(context as Resources, R.drawable.btn_outsta_my, null)).centerCrop().into(holder.ownerImg)
-//            }
-            post.owner_profile.let{
-                glide.load(it).centerCrop().into(holder.ownerImg)
+            post.owner_profile.image?.let{
+                // image? => image가 null이 아닌 경우에만 이미지를 넣어줌 null이면 xml파일에서 설정한 기본이미지가 올거임
+                glide.load(it).centerCrop().circleCrop().into(holder.ownerImg)
             }
             post.image.let{
                 glide.load(it).centerCrop().into(holder.postImg)

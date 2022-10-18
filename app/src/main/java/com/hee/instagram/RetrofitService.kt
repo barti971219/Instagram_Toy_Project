@@ -8,14 +8,19 @@ class User(
 )
 
 class InstaPost(
-    val content: String, val image:String, val owner_profile: OwnerProfile
+    val id:Int, val content: String, val image:String, val owner_profile: OwnerProfile
 )
 
 class OwnerProfile(
-    val username: String, val image: String
+    val username: String, val image: String?
 )
 
 interface RetrofitService {
+
+    @POST("instagram/post/like/{post_id}")
+    fun postLike(
+        @Path("post_id") post_id: Int
+    ): Call<Any>
 
     @GET("instagram/post/list/all/")
     fun getInstagramPosts(
