@@ -19,6 +19,7 @@ class InstaSplashActivity : AppCompatActivity() {
             }
             else -> {
                 // 로그인이 되어있는 경우
+                startActivity(Intent(this, InstaMainActivity::class.java))
             }
         }
     }

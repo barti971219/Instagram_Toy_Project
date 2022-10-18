@@ -47,16 +47,19 @@ class InstaLoginActivity : AppCompatActivity() {
             val user = HashMap<String, Any>()
             user.put("username", username)
             user.put("password", password)
-            retrofitService.instaLogin(user).enqueue(object: Callback<UserToken>{
-                override fun onResponse(call: Call<UserToken>, response: Response<UserToken>) {
+            retrofitService.instaLogin(user).enqueue(object: Callback<User>{
+                override fun onResponse(call: Call<User>, response: Response<User>) {
                     if(response.isSuccessful){
-                        val userToken: UserToken = response.body()!!
-                        Log.d("instaa", userToken.token)
+                        val user: User = response.body()!!
+                        Log.d("instaa", user.token)
                         val sharedPreferences =
                             getSharedPreferences("user_info", Context.MODE_PRIVATE)
                         val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                        editor.putString("token", userToken.token)
+                        editor.putString("token", user.token)
+                        editor.putString("token", user.id.toString())
                         editor.commit()
+
+                        startActivity(Intent(this@InstaLoginActivity, InstaMainActivity::class.java))
 
                     }else{
                         Toast.makeText(this@InstaLoginActivity, "로그인 정보가 맞지 않습니다. 다시 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -64,7 +67,7 @@ class InstaLoginActivity : AppCompatActivity() {
 
                 }
 
-                override fun onFailure(call: Call<UserToken>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     TODO("Not yet implemented")
                 }
             })

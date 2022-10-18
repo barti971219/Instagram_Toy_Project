@@ -3,11 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.10461630695443645" />
         <entry key="app/src/main/res/drawable/insta_input_bg.xml" value="0.124" />
         <entry key="app/src/main/res/drawable/insta_login.xml" value="0.185" />
         <entry key="app/src/main/res/layout/activity_insta_join.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_insta_login.xml" value="0.1703125" />
+        <entry key="app/src/main/res/layout/activity_insta_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_insta_splash.xml" value="0.15625" />
+        <entry key="app/src/main/res/layout/insta_feed_fragment.xml" value="0.2703804347826087" />
+        <entry key="app/src/main/res/layout/insta_post_fragment.xml" value="0.2703804347826087" />
+        <entry key="app/src/main/res/layout/insta_profile_fragment.xml" value="0.2703804347826087" />
+        <entry key="app/src/main/res/layout/post_item.xml" value="0.17083333333333334" />
       </map>
     </option>
   </component>

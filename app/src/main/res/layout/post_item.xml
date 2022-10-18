@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="23dp"
+    android:orientation="vertical">
+
+    <!--  프로필 부분 -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingLeft="13dp"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/owner_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/owner_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#1d1d1d"/>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <!-- 사진 부분 -->
+    <ImageView
+        android:id="@+id/post_img"
+        android:layout_width="match_parent"
+        android:layout_height="412dp"/>
+
+    <TextView
+        android:id="@+id/post_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="6dp"
+        android:paddingRight="16dp"
+        android:textColor="#1d1d1d"
+        android:textSize="16dp"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
