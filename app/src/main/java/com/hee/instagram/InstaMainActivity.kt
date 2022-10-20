@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 
+var pager: ViewPager2? = null
 class InstaMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,14 +21,14 @@ class InstaMainActivity : AppCompatActivity() {
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_my))
 
         // pager 가져오고 adapter생성해주기
-        val pager = findViewById<ViewPager2>(R.id.main_pager)
-        pager.adapter = InstaMaingPagerAdapter(this@InstaMainActivity, 3)
+        pager = findViewById<ViewPager2>(R.id.main_pager)
+        pager!!.adapter = InstaMaingPagerAdapter(this@InstaMainActivity, 3)
 
         // tab이랑 pager랑 연결해주기
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                pager.setCurrentItem(tab!!.position)
+                pager!!.setCurrentItem(tab!!.position)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -38,7 +39,25 @@ class InstaMainActivity : AppCompatActivity() {
         })
 
 
+
+
     }
+
+    fun changeFragment(index: Int){
+        when(index){
+            0 ->{
+                pager!!.setCurrentItem(0)
+            }
+            1 ->{
+                pager!!.setCurrentItem(1)
+            }
+            else ->{
+                pager!!.setCurrentItem(2)
+            }
+        }
+    }
+
+
 }
 
 class InstaMaingPagerAdapter(

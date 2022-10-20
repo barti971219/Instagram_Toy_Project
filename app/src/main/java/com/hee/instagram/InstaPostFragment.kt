@@ -89,6 +89,9 @@ class InstaPostFragment : Fragment() {
 
             retrofitService.uploadPost(header, body, content).enqueue(object: Callback<Any> {
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                    (activity as InstaMainActivity).changeFragment(0)
+                    Log.d("instaa", call.toString())
+                    Log.d("instaa", response.toString())
                 }
 
                 override fun onFailure(call: Call<Any>, t: Throwable) {
