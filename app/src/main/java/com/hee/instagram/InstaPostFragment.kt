@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -30,6 +31,10 @@ import java.io.File
 class InstaPostFragment : Fragment() {
     var imageUri : Uri? = null
     var contentInput : String = ""
+    lateinit var selectedContent: EditText
+    lateinit var selectedImageView : ImageView
+    lateinit var upload : TextView
+    lateinit var imagePickerLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,25 +44,14 @@ class InstaPostFragment : Fragment() {
         return inflater.inflate(R.layout.insta_post_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val selectedImageView = view.findViewById<ImageView>(R.id.selected_img)
-        val glide = Glide.with(activity as InstaMainActivity)
-
-        // 변수에 함수를 정의해놓음
-        val imagePickerLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-                imageUri = it.data!!.data
-                glide.load(imageUri).into(selectedImageView)
-            }
+    fun makePost(){
 
         imagePickerLauncher.launch(
             Intent(Intent.ACTION_PICK).apply {
                 this.type = MediaStore.Images.Media.CONTENT_TYPE
             }
         )
-        view.findViewById<EditText>(R.id.selected_content).doAfterTextChanged {
+        selectedContent.doAfterTextChanged {
             contentInput = it.toString()
         }
 
@@ -67,7 +61,7 @@ class InstaPostFragment : Fragment() {
             .build()
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-        view.findViewById<TextView>(R.id.upload).setOnClickListener{
+        upload.setOnClickListener{
             // 파일 얻어오기
 
             val file = getRealFile(imageUri!!)
@@ -98,6 +92,22 @@ class InstaPostFragment : Fragment() {
                 }
             })
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        selectedContent = view.findViewById(R.id.selected_content)
+        selectedImageView = view.findViewById(R.id.selected_img)
+        upload = view.findViewById(R.id.upload)
+
+        val glide = Glide.with(activity as InstaMainActivity)
+
+        // 변수에 함수를 정의해놓음
+        imagePickerLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                imageUri = it.data!!.data
+                glide.load(imageUri).into(selectedImageView)
+            }
     }
 
     // uri로 path를 알아내고 File객체를 반환해주는 과정

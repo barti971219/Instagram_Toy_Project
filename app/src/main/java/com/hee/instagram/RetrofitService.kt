@@ -13,11 +13,31 @@ class InstaPost(
     val id:Int, val content: String, val image:String, val owner_profile: OwnerProfile
 )
 
+class UserInfo(
+    val id : Int,
+    val username: String,
+    val profile : OwnerProfile
+)
+
 class OwnerProfile(
     val username: String, val image: String?
 )
 
 interface RetrofitService {
+
+    @Multipart
+    @PUT("user/profile/{user_id}/")
+    fun changeProfile(
+        @Path("user_id")userId : Int,
+        @HeaderMap headers: Map<String, String>,
+        @Part image : MultipartBody.Part,
+        @Part("user") user : RequestBody
+    ):Call<Any>
+
+    @GET("user/userInfo/")
+    fun getUserInfo(
+        @HeaderMap headers: Map<String, String>
+    ):Call<UserInfo>
 
     @Multipart
     @POST("instagram/post/")

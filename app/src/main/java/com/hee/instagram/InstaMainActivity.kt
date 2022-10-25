@@ -10,6 +10,9 @@ import com.google.android.material.tabs.TabLayout
 
 var pager: ViewPager2? = null
 class InstaMainActivity : AppCompatActivity() {
+
+    val instaPostFragment = InstaPostFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insta_main)
@@ -22,13 +25,16 @@ class InstaMainActivity : AppCompatActivity() {
 
         // pager 가져오고 adapter생성해주기
         pager = findViewById<ViewPager2>(R.id.main_pager)
-        pager!!.adapter = InstaMaingPagerAdapter(this@InstaMainActivity, 3)
+        pager!!.adapter = InstaMaingPagerAdapter(this@InstaMainActivity, 3, instaPostFragment)
 
         // tab이랑 pager랑 연결해주기
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 pager!!.setCurrentItem(tab!!.position)
+                if(tab!!.position == 1){
+                    instaPostFragment.makePost()
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -63,7 +69,8 @@ class InstaMainActivity : AppCompatActivity() {
 class InstaMaingPagerAdapter(
     // 탭으로 pager를 전환할때마다 바뀌는 fragment
     fragmentActivity : FragmentActivity,
-    val tabCount: Int
+    val tabCount: Int,
+    val instaPostFragment : InstaPostFragment
 ) : FragmentStateAdapter(fragmentActivity){
 
     override fun getItemCount(): Int {
@@ -73,7 +80,7 @@ class InstaMaingPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         when(position){
             0 -> return InstaFeedFragment()
-            1 -> return InstaPostFragment()
+            1 -> return instaPostFragment
             else -> return InstaProfileFragment()
         }
     }
